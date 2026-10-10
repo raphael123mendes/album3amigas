@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 Amigas nas Arábias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noite:#2b1238; --noite2:#3d1a4d; --areia:#f6e3bd; --acafrao:#f4a62a;
+  --coral:#ee5a4b; --turquesa:#19b5b0; --texto:#fff7e6;
+  --serif:'Alfa Slab One', Georgia, serif; --sans:'Nunito', system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans); color:var(--texto); min-height:100vh;
+  background:linear-gradient(180deg,#e9743f 0,#b13d62 18%,var(--noite2) 42%,var(--noite) 100%) fixed;
+  padding-bottom:40px;
+}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px}
+header{text-align:center;padding:36px 0 22px}
+header h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.2rem,8vw,4.4rem);line-height:1.02;color:var(--areia);text-shadow:0 4px 0 #8a2d4e}
+header p{margin-top:12px;font-size:1.05rem;opacity:.92}
+
+.player{display:grid;grid-template-columns:minmax(0,340px) 1fr;gap:28px;align-items:center;margin:14px 0 34px}
+.capa-grande{width:100%;aspect-ratio:3/4;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45);background:#000}
+.capa-grande img{width:100%;height:100%;object-fit:cover;display:block}
+.agora small{display:inline-block;font-weight:800;color:#2b1238;background:var(--acafrao);padding:3px 12px;border-radius:99px;font-size:.8rem}
+.agora h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,5vw,2.6rem);line-height:1.1;margin:12px 0 4px;color:var(--areia)}
+.agora .sub{opacity:.85;margin-bottom:20px}
+.barra{width:100%;height:10px;border-radius:99px;background:rgba(255,255,255,.18);cursor:pointer;position:relative;overflow:hidden}
+.barra i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--acafrao);border-radius:99px}
+.tempos{display:flex;justify-content:space-between;font-size:.85rem;opacity:.8;margin:6px 0 16px}
+.ctrl{display:flex;align-items:center;gap:14px}
+.ctrl button{border:0;cursor:pointer;color:#2b1238;background:var(--areia);width:52px;height:52px;border-radius:50%;font-size:1.2rem;display:grid;place-items:center}
+.ctrl button.play{width:72px;height:72px;background:var(--acafrao);font-size:1.7rem}
+.ctrl button:focus-visible,.faixa:focus-visible{outline:3px solid var(--turquesa);outline-offset:3px}
+.aviso{display:none;margin-top:14px;padding:10px 14px;border-radius:10px;background:rgba(238,90,75,.25);font-size:.92rem}
+
+h3{font-family:var(--serif);font-weight:400;font-size:1.5rem;color:var(--areia);margin-bottom:12px}
+.lista{display:grid;gap:10px}
+.faixa{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;width:100%;text-align:left;border:2px solid transparent;background:rgba(255,255,255,.08);color:inherit;font:inherit;padding:8px;border-radius:12px;cursor:pointer}
+.faixa:hover{background:rgba(255,255,255,.14)}
+.faixa.ativa{border-color:var(--acafrao);background:rgba(244,166,42,.16)}
+.faixa img{width:64px;height:64px;object-fit:cover;object-position:top;border-radius:8px}
+.faixa b{display:block;font-size:1.05rem}
+.faixa span{font-size:.88rem;opacity:.8}
+.tag{font-weight:800;font-size:.78rem;padding:4px 12px;border-radius:99px;color:#2b1238;white-space:nowrap}
+.axe{background:#ffd23f}.sertanejo{background:#f0a56a}.rock{background:#ee5a4b}.reggae{background:#4fd1a5}
+footer{text-align:center;margin-top:34px;opacity:.75;font-size:.9rem}
+
+@media (max-width:720px){
+  .player{grid-template-columns:1fr;gap:20px}
+  .capa-grande{max-width:300px;margin:0 auto}
+  .agora{text-align:center}
+  .ctrl{justify-content:center}
+  .faixa{grid-template-columns:56px 1fr}
+  .faixa img{width:56px;height:56px}
+  .faixa .tag{grid-column:2;justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>3 Amigas<br>nas Arábias</h1>
+    <p>Quatro músicas, três amigas e uma viagem inesquecível. Aperte o play!</p>
+  </header>
+
+  <section class="player" aria-label="Tocando agora">
+    <div class="capa-grande"><img id="capa" alt="Capa da música"></div>
+    <div class="agora">
+      <small id="numero">Faixa 1 de 4</small>
+      <h2 id="titulo"></h2>
+      <p class="sub" id="sub"></p>
+      <div class="barra" id="barra" role="slider" aria-label="Progresso da música"><i id="prog"></i></div>
+      <div class="tempos"><span id="atual">0:00</span><span id="total">0:00</span></div>
+      <div class="ctrl">
+        <button id="ant" aria-label="Música anterior">&#9198;</button>
+        <button id="play" class="play" aria-label="Tocar">&#9654;</button>
+        <button id="prox" aria-label="Próxima música">&#9197;</button>
+      </div>
+      <div class="aviso" id="aviso">Não achei o arquivo desta música. Confira se o MP4 está na mesma pasta do site, com o nome certo.</div>
+    </div>
+  </section>
+
+  <h3>Todas as faixas</h3>
+  <div class="lista" id="lista"></div>
+
+  <footer>Feito com carinho para a família</footer>
+</div>
+
+<audio id="audio" preload="metadata"></audio>
+
+<script>
+/* Para mudar a ordem, troque as linhas de lugar.
+   O campo "arquivo" é o nome do MP4 na mesma pasta do index.html. */
+const faixas = [
+  {titulo:"Carnaval no Oriente", sub:"Mistura de Curitiba com as Arábias", estilo:"Axé", cls:"axe", arquivo:"carnaval-no-oriente.mp4", capa:"capas/carnaval-no-oriente.jpg"},
+  {titulo:"O Zíper do Dubai Mall", sub:"Sofrência nas Arábias", estilo:"Sertanejo", cls:"sertanejo", arquivo:"o-ziper-do-dubai-mall.mp4", capa:"capas/o-ziper-do-dubai-mall.jpg"},
+  {titulo:"A Mala Não Fecha", sub:"Desventura no Golfo", estilo:"Rock", cls:"rock", arquivo:"a-mala-nao-fecha.mp4", capa:"capas/a-mala-nao-fecha.jpg"},
+  {titulo:"As Psicólogas e o Calor", sub:"Reggae tropical no Golfo", estilo:"Reggae Pop", cls:"reggae", arquivo:"as-psicologas-e-o-calor.mp4", capa:"capas/as-psicologas-e-o-calor.jpg"}
+];
+const $ = id => document.getElementById(id);
+const audio = $('audio'); let i = 0;
+
+$('lista').innerHTML = faixas.map((f,n)=>
+  `<button class="faixa" data-n="${n}"><img src="${f.capa}" alt=""><div><b>${f.titulo}</b><span>${f.sub}</span></div><em class="tag ${f.cls}" style="font-style:normal">${f.estilo}</em></button>`
+).join('');
+
+function fmt(s){ if(!isFinite(s)) return '0:00'; const m=Math.floor(s/60), r=Math.floor(s%60); return m+':'+String(r).padStart(2,'0'); }
+
+function carregar(n, tocar){
+  i = (n+faixas.length)%faixas.length; const f = faixas[i];
+  audio.src = f.arquivo;
+  $('capa').src = f.capa; $('capa').alt = 'Capa de '+f.titulo;
+  $('titulo').textContent = f.titulo; $('sub').textContent = f.sub+' · '+f.estilo;
+  $('numero').textContent = 'Faixa '+(i+1)+' de '+faixas.length;
+  $('aviso').style.display='none'; $('prog').style.width='0'; $('atual').textContent='0:00'; $('total').textContent='0:00';
+  document.querySelectorAll('.faixa').forEach((b,k)=>b.classList.toggle('ativa',k===i));
+  document.title = f.titulo+' · 3 Amigas nas Arábias';
+  if(tocar) audio.play().catch(()=>{});
+}
+
+$('play').onclick = ()=> audio.paused ? audio.play().catch(()=>{}) : audio.pause();
+$('prox').onclick = ()=> carregar(i+1, true);
+$('ant').onclick = ()=> audio.currentTime>3 ? (audio.currentTime=0) : carregar(i-1, true);
+$('lista').onclick = e => { const b=e.target.closest('.faixa'); if(b){ carregar(+b.dataset.n, true); window.scrollTo({top:0}); } };
+
+audio.onplay = ()=>{ $('play').innerHTML='&#10074;&#10074;'; $('play').setAttribute('aria-label','Pausar'); };
+audio.onpause = ()=>{ $('play').innerHTML='&#9654;'; $('play').setAttribute('aria-label','Tocar'); };
+audio.onended = ()=> carregar(i+1, true);
+audio.onerror = ()=>{ $('aviso').style.display='block'; };
+audio.onloadedmetadata = ()=>{ $('total').textContent = fmt(audio.duration); };
+audio.ontimeupdate = ()=>{ $('atual').textContent = fmt(audio.currentTime); if(audio.duration) $('prog').style.width = (audio.currentTime/audio.duration*100)+'%'; };
+$('barra').onclick = e => { const r=$('barra').getBoundingClientRect(); if(audio.duration) audio.currentTime = (e.clientX-r.left)/r.width*audio.duration; };
+
+carregar(0,false);
+</script>
+</body>
+</html>
