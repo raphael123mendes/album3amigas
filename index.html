@@ -84,7 +84,7 @@ footer{text-align:center;margin-top:34px;opacity:.75;font-size:.9rem}
         <button id="play" class="play" aria-label="Tocar">&#9654;</button>
         <button id="prox" aria-label="Próxima música">&#9197;</button>
       </div>
-      <div class="aviso" id="aviso">Não achei o arquivo desta música. Confira se o MP4 está na mesma pasta do site, com o nome certo.</div>
+      <div class="aviso" id="aviso">Não achei o arquivo desta música. Confira se o MP3 está na mesma pasta do site, com o nome certo.</div>
     </div>
   </section>
 
@@ -98,12 +98,12 @@ footer{text-align:center;margin-top:34px;opacity:.75;font-size:.9rem}
 
 <script>
 /* Para mudar a ordem, troque as linhas de lugar.
-   O campo "arquivo" é o nome do MP4 na mesma pasta do index.html. */
+   O campo "arquivo" é o nome do MP3 na mesma pasta do index.html. */
 const faixas = [
-  {titulo:"Carnaval no Oriente", sub:"Mistura de Curitiba com as Arábias", estilo:"Axé", cls:"axe", arquivo:"carnaval-no-oriente.mp4", capa:"capas/carnaval-no-oriente.jpg"},
-  {titulo:"O Zíper do Dubai Mall", sub:"Sofrência nas Arábias", estilo:"Sertanejo", cls:"sertanejo", arquivo:"o-ziper-do-dubai-mall.mp4", capa:"capas/o-ziper-do-dubai-mall.jpg"},
-  {titulo:"A Mala Não Fecha", sub:"Desventura no Golfo", estilo:"Rock", cls:"rock", arquivo:"a-mala-nao-fecha.mp4", capa:"capas/a-mala-nao-fecha.jpg"},
-  {titulo:"As Psicólogas e o Calor", sub:"Reggae tropical no Golfo", estilo:"Reggae Pop", cls:"reggae", arquivo:"as-psicologas-e-o-calor.mp4", capa:"capas/as-psicologas-e-o-calor.jpg"}
+  {titulo:"Carnaval no Oriente", sub:"Mistura de Curitiba com as Arábias", estilo:"Axé", cls:"axe", arquivo:"carnaval-no-oriente.mp3", capa:"capas/carnaval-no-oriente.jpg"},
+  {titulo:"O Zíper do Dubai Mall", sub:"Sofrência nas Arábias", estilo:"Sertanejo", cls:"sertanejo", arquivo:"o-ziper-do-dubai-mall.mp3", capa:"capas/o-ziper-do-dubai-mall.jpg"},
+  {titulo:"A Mala Não Fecha", sub:"Desventura no Golfo", estilo:"Rock", cls:"rock", arquivo:"a-mala-nao-fecha.mp3", capa:"capas/a-mala-nao-fecha.jpg"},
+  {titulo:"As Psicólogas e o Calor", sub:"Reggae tropical no Golfo", estilo:"Reggae Pop", cls:"reggae", arquivo:"as-psicologas-e-o-calor.mp3", capa:"capas/as-psicologas-e-o-calor.jpg"}
 ];
 const $ = id => document.getElementById(id);
 const audio = $('audio'); let i = 0;
