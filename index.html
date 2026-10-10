@@ -50,6 +50,16 @@ h3{font-family:var(--serif);font-weight:400;font-size:1.5rem;color:var(--areia);
 .faixa span{font-size:.88rem;opacity:.8}
 .tag{font-weight:800;font-size:.78rem;padding:4px 12px;border-radius:99px;color:#2b1238;white-space:nowrap}
 .axe{background:#ffd23f}.sertanejo{background:#f0a56a}.rock{background:#ee5a4b}.reggae{background:#4fd1a5}
+
+.letra-bloco{margin:0 0 34px}
+.letra{height:340px;overflow-y:auto;padding:18px 18px 120px;border-radius:14px;background:rgba(0,0,0,.28);scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.letra p{font-size:1.05rem;line-height:1.35;padding:7px 10px;margin:0;border-radius:8px;opacity:.55;cursor:pointer;transition:opacity .25s,color .25s,transform .25s;transform-origin:left center}
+.letra p:hover{opacity:.85}
+.letra p.passou{opacity:.4}
+.letra p.agora-linha{opacity:1;color:var(--acafrao);font-weight:800;font-size:1.25rem;background:rgba(244,166,42,.12)}
+.letra .rotulo{display:inline-block;font-size:.72rem;font-weight:800;color:#2b1238;background:var(--turquesa);padding:1px 8px;border-radius:99px;margin-right:8px;vertical-align:middle}
+@media (prefers-reduced-motion:reduce){.letra{scroll-behavior:auto}}
+@media (max-width:720px){.letra{height:300px}.letra p{font-size:1rem}.letra p.agora-linha{font-size:1.15rem}}
 footer{text-align:center;margin-top:34px;opacity:.75;font-size:.9rem}
 
 @media (max-width:720px){
@@ -88,6 +98,11 @@ footer{text-align:center;margin-top:34px;opacity:.75;font-size:.9rem}
     </div>
   </section>
 
+  <div class="letra-bloco">
+    <h3>Letra</h3>
+    <div class="letra" id="letra" aria-live="off"></div>
+  </div>
+
   <h3>Todas as faixas</h3>
   <div class="lista" id="lista"></div>
 
@@ -99,10 +114,11 @@ footer{text-align:center;margin-top:34px;opacity:.75;font-size:.9rem}
 <script>
 /* Para mudar a ordem, troque as linhas de lugar.
    O campo "arquivo" é o nome do MP3 na mesma pasta do index.html. */
+const LETRAS = [[[0, "Segura meu Rei! Essa é a mistura de Curitiba com o Oriente Médio!", ""], [5, "Alúdima! Kátia! Rosiclér!", ""], [9, "Alô casalzinho abençoado, prepara o motor que o trio chegou!", ""], [12, "Saíram de Curitiba, deixaram o frio pra trás", ""], [16, "Duas psicólogas que não aguentavam mais", ""], [20, "Kátia e Rosiclér vieram analisar", ""], [24, "Se o calor do deserto faz a mente pirar", ""], [28, "O casal que acolheu nem sabia o que esperava", ""], [32, "Virou guia, motorista e fotógrafo da galera", ""], [35, "Ajusta o foco, liga o ar, vira a curva e tira a foto!", ""], [38, "Ralando o tchan nas dunas de Dubai!", "Refrão"], [43, "Esse trio de Curitiba ninguém segura mais!", ""], [47, "Sobe no camelo, mexe o quadril", ""], [51, "As amigas em Abu Dhabi são o charme do Brasil!", ""], [55, "Ali Babá! Ali Babá!", ""], [59, "Tira o casaco do frio e vem pra cá dançar!", ""], [64, "No pôr do sol no deserto, que cena bonita", ""], [68, "Em cima do camelo a Alúdima se esquisita", ""], [72, "Perguntaram do mar: \"É Omã ou Golfo Árabe?\"", ""], [76, "Elas disseram: \"Tanto faz, contanto que seja chique!\"", ""], [80, "Ninguém sabe a diferença, mas o mergulho é triunfal", ""], [84, "Na geografia da viagem o importante é o alto astral!", ""], [89, "Ralando o tchan nas dunas de Dubai!", "Refrão"], [94, "Esse trio de Curitiba ninguém segura mais!", ""], [98, "Sobe no camelo, mexe o quadril", ""], [102, "As amigas em Abu Dhabi são o charme do Brasil!", ""], [106, "Ali Babá! Ali Babá!", ""], [110, "Tira o casaco do frio e vem pra cá dançar!", ""], [115, "Na Mesquita e no Louvre, que arquitetura linda!", ""], [119, "No topo do Burj Khalifa o queixo cai ainda!", ""], [123, "Mas quando entram no shopping... ai meu cartão de crédito!", ""], [127, "Os vendedores choram de emoção e de afeto!", ""], [131, "A mala não fecha, o zíper vai estourar", ""], [135, "O pessoal do Dubai Mall já tá querendo chorar!", ""], [140, "Mexe a cintura, Alúdima!", ""], [143, "Analisa essa dança, Kátia!", ""], [146, "Fecha essa mala, Rosiclér!", ""], [149, "Segura o Tchan das Arábias!", ""], [153, "Ralando o tchan nas dunas de Dubai!", "Refrão"], [158, "Esse trio de Curitiba ninguém segura mais!", ""], [162, "Sobe no camelo, mexe o quadril", ""], [166, "As amigas em Abu Dhabi são o charme do Brasil!", ""], [170, "Ali Babá! Ali Babá!", ""], [174, "Tira o casaco do frio e vem pra cá dançar!", ""], [178, "A mala não fecha não, gente! Chama a segurança do aeroporto!", ""]], [[0, "Trocaram o frio de Curitiba pelo calor do deserto...", "Fala"], [4, "Duas psicólogas e uma amiga tentando manter a calma...", ""], [8, "Mas quando o cartão passa no Dubai Mall, aí a sofrência é certa!", ""], [12, "Saíram lá de Curitiba com a mala cheia de ilusão", ""], [18, "Alúdima, Kátia e Rosiclér aterrissaram no mar de areia da região", ""], [24, "Coitado do casal que foi buscar no aeroporto", ""], [29, "Virou guia, motorista e fotógrafo... coitado, tá quase morto!", ""], [33, "Kátia e Rosiclér tentando analisar", ""], [36, "Se no calor de Abu Dhabi a mente vai pifar", ""], [38, "Olharam pro mar e bateu a dúvida cruel", ""], [42, "\"É Golfo de Omã ou Golfo Árabe que tá debaixo desse céu?\"", ""], [46, "Elas disseram: \"Ninguém sabe a diferença, mas se for chique a gente vai se jogar!\"", ""], [51, "E o camelo vai balançando e as costas vão doendo!", "Refrão"], [57, "No topo do Burj Khalifa meu queixo vai caindo!", ""], [63, "A Kátia e a Rosiclér na Mesquita tirando foto,", ""], [69, "E o zíper da minha mala estourando no sufoco!", ""], [73, "Ô coitado... o vendedor do shopping tá chorando no balcão,", ""], [78, "Esse trio de Curitiba quebrou meu coração!", ""], [83, "No Louvre de Abu Dhabi a arte é uma beleza,", ""], [88, "Mas no shopping de Dubai o cartão perde a cabeça!", ""], [93, "Compraram tanto presente, de lenço até souvenir,", ""], [97, "Que o zíper da rodinha tá prestes a pifá e desistir!", ""], [100, "A mala não fecha nem com três sentadas em cima,", ""], [102, "É a sofrência do excesso de bagagem nessa viagem de rotina!", ""], [103, "E o camelo vai balançando e as costas vão doendo!", "Refrão"], [108, "No topo do Burj Khalifa meu queixo vai caindo!", ""], [113, "A Kátia e a Rosiclér na Mesquita tirando foto,", ""], [118, "E o zíper da minha mala estourando no sufoco!", ""], [123, "Ô coitado... o vendedor do shopping tá chorando no balcão,", ""], [128, "Esse trio de Curitiba quebrou meu coração!", ""], [133, "Senta na mala, Alúdima... ajuda a fechar que o voo tá saindo!", ""]], [[0, "Atenção galera, as tias tão na área!", ""], [8, "Curitiba ficou pequena pras Arábias!", ""], [16, "Saíram lá de Curitiba pro calor sem fim", ""], [20, "Alúdima, Kátia e Rosiclér no avião assim", ""], [24, "Kátia e Rosiclér de humanas, mentes de divã", ""], [28, "Analisando os sheiks logo de manhã", ""], [32, "E o pobre do casal que foi lá receber", ""], [36, "Virou guia e motorista sem nem perceber", ""], [40, "Tira foto, carrega bolsa, vira o volante", ""], [44, "A vida de turista ali é bem estressante", ""], [48, "E a dúvida paira, no golfo azul", ""], [52, "Onde é que estamos? Norte ou Sul?", ""], [56, "Golfo Árabe ou Omã, que confusão total", ""], [60, "Mas o que importa é que o close é surreal", ""], [64, "Noites das Arábias, rock no deserto", "Refrão"], [68, "A mala não fecha e o caos tá por perto!", ""], [72, "Noites das Arábias, rock no deserto", ""], [76, "Andando de camelo, o horizonte tá certo!", ""], [112, "Mesquita, Louvre e o Burj Khalifa no céu", ""], [116, "A arquitetura foda tirou o chapéu", ""], [120, "Mas foi no shopping que o bicho pegou de verdade", ""], [124, "A gerente já tá chorando de tanta saudade", ""], [128, "O cartão de crédito já tá pedindo socorro", ""], [132, "E a Rosiclér me diz: \"Calma que eu não morro\"", ""], [136, "Mas a mala tá gorda, não quer mais fechar", ""], [140, "Quatro pessoas em cima pra tentar travar", ""], [144, "Noites das Arábias, rock no deserto", "Refrão"], [148, "A mala não fecha e o caos tá por perto!", ""], [152, "Noites das Arábias, rock no deserto", ""], [156, "Andando de camelo, o horizonte tá certo!", ""], [176, "E a mala ficou lá em Dubai! Tchau!", ""]], [[0, "Sente o ritmo... Kátia, Rosiclér e Alúdima nas Arábias.", ""], [6, "Olha o naipe dessas psicólogas!", ""], [12, "O sol de Dubai brilha forte no céu", ""], [16, "Visitaram a Mesquita e o Louvre, que véu!", ""], [20, "O Burj Khalífa é gigante e bonito", ""], [24, "E o trem pra Fujairá foi um lindo rito", ""], [28, "Kátia e Rosiclér de olho no sheik, atentas", ""], [32, "Analisando a mente dessas lendas!", ""], [36, "Na praia azul, batendo o mar", ""], [40, "Ficou a dúvida sem terminar:", ""], [44, "\"É Golfo Árabe ou Golfo de Omã?\"", ""], [46, "Rosiclér fala: \"Eu não sei, só quero meu suco de romã!\"", ""], [48, "Passeio no deserto ao pôr do sol", "Refrão"], [52, "No Dubai Mall o cartão chora sem dó!", ""], [56, "Bateu a maré alta, o estilo é de star", ""], [60, "As amigas de Curitiba vieram pra arrasar!", ""], [72, "Pegaram o camelo pra ver a paisagem", ""], [76, "E haja fôlego nessa viagem!", ""], [80, "Imagina caminhar três quilômetros neste mormaço", ""], [84, "Mas com esse pique, elas dão de braço!", ""], [88, "A mala não fecha, o zíper vai estourar", ""], [92, "E as amigas prontas pra festejar!", ""], [96, "Passeio no deserto ao pôr do sol", "Refrão"], [100, "No Dubai Mall o cartão chora sem dó!", ""], [104, "Bateu a maré alta, o estilo é de star", ""], [108, "As amigas de Curitiba vieram pra arrasar!", ""], [144, "Passeio no deserto ao pôr do sol", "Refrão"], [148, "No Dubai Mall o cartão chora sem dó!", ""], [152, "Bateu a maré alta, o estilo é de star", ""], [156, "As amigas de Curitiba vieram pra arrasar!", ""], [168, "E as amigas de Curitiba vieram pra arrasar...", ""], [172, "Dubai Mall... o cartão chora... as psicólogas... tchau, tchau!", ""]]];
 const faixas = [
   {titulo:"Carnaval no Oriente", sub:"Mistura de Curitiba com as Arábias", estilo:"Axé", cls:"axe", arquivo:"carnaval-no-oriente.mp3", capa:"capas/carnaval-no-oriente.jpg"},
   {titulo:"O Zíper do Dubai Mall", sub:"Sofrência nas Arábias", estilo:"Sertanejo", cls:"sertanejo", arquivo:"o-ziper-do-dubai-mall.mp3", capa:"capas/o-ziper-do-dubai-mall.jpg"},
-  {titulo:"A Mala Não Fecha", sub:"Desventura no Golfo", estilo:"Rock", cls:"rock", arquivo:"a-mala-nao-fecha.mp3", capa:"capas/a-mala-nao-fecha.jpg"},
+  {titulo:"A Mala Não Fecha", sub:"Desventura no Golfo", estilo:"Pop-Rock", cls:"rock", arquivo:"a-mala-nao-fecha.mp3", capa:"capas/a-mala-nao-fecha.jpg"},
   {titulo:"As Psicólogas e o Calor", sub:"Reggae tropical no Golfo", estilo:"Reggae Pop", cls:"reggae", arquivo:"as-psicologas-e-o-calor.mp3", capa:"capas/as-psicologas-e-o-calor.jpg"}
 ];
 const $ = id => document.getElementById(id);
@@ -122,6 +138,7 @@ function carregar(n, tocar){
   $('numero').textContent = 'Faixa '+(i+1)+' de '+faixas.length;
   $('aviso').style.display='none'; $('prog').style.width='0'; $('atual').textContent='0:00'; $('total').textContent='0:00';
   document.querySelectorAll('.faixa').forEach((b,k)=>b.classList.toggle('ativa',k===i));
+  montarLetra();
   document.title = f.titulo+' · 3 Amigas nas Arábias';
   if(tocar) audio.play().catch(()=>{});
 }
@@ -138,6 +155,24 @@ audio.onerror = ()=>{ $('aviso').style.display='block'; };
 audio.onloadedmetadata = ()=>{ $('total').textContent = fmt(audio.duration); };
 audio.ontimeupdate = ()=>{ $('atual').textContent = fmt(audio.currentTime); if(audio.duration) $('prog').style.width = (audio.currentTime/audio.duration*100)+'%'; };
 $('barra').onclick = e => { const r=$('barra').getBoundingClientRect(); if(audio.duration) audio.currentTime = (e.clientX-r.left)/r.width*audio.duration; };
+
+let linhaAtual=-1;
+function montarLetra(){
+  const L=LETRAS[i]||[];
+  $('letra').innerHTML=L.map((l,k)=>`<p data-k="${k}">${l[2]?'<span class="rotulo">'+l[2]+'</span>':''}${l[1]}</p>`).join('');
+  $('letra').scrollTop=0; linhaAtual=-1;
+}
+$('letra').onclick=e=>{const p=e.target.closest('p');if(!p)return;audio.currentTime=LETRAS[i][+p.dataset.k][0];audio.play().catch(()=>{});};
+function atualizarLetra(){
+  const L=LETRAS[i]||[],t=audio.currentTime;let k=-1;
+  for(let n=0;n<L.length;n++){ if(L[n][0]<=t) k=n; else break; }
+  if(k===linhaAtual) return; linhaAtual=k;
+  const ps=$('letra').children;
+  for(let n=0;n<ps.length;n++){ ps[n].classList.toggle('agora-linha',n===k); ps[n].classList.toggle('passou',n<k); }
+  if(k>=0){ const p=ps[k],box=$('letra'); box.scrollTo({top:p.offsetTop-box.clientHeight/2+p.clientHeight/2}); }
+}
+audio.addEventListener('timeupdate',atualizarLetra);
+audio.addEventListener('seeked',atualizarLetra);
 
 carregar(0,false);
 </script>
